@@ -105,12 +105,16 @@ var allFunctions = function () {
     request.open("GET", requestUrl, true);
     request.onload = function () {
       if (this.status >= 200 && this.status < 400) {
+		// For debugging, we use queryselector to choose the main .forDebug2, then clear the innerHTML.  
+		var debugDiv = document.querySelector("main .forDebug2");
+		debugDiv.innerHTML = "";
         var textarea = document.createElement("textarea");
         textarea.rows = "20";
         textarea.cols = "60";
         textarea.style.border = "solid 1px black";
         textarea.textContent = this.responseText;
-        document.querySelector("main .forDebug2").append(textarea);
+		//Here we then need to append the new text.
+		debugDiv.append(textarea);
         var xmlData = this.responseXML;
         handleXMLResponse(xmlData);
       } else {
@@ -127,6 +131,9 @@ var allFunctions = function () {
   };
 
   var handleXMLResponse = function (data) {
+	var table = document.querySelector("#xmlDataAsTable");
+	// remove previous rows in table 
+	table.innerHTML = "";
     var feature = data.getElementsByTagName("intersection")[0];
     if (typeof feature !== "undefined" && feature.childNodes.length > 0) {
       var headerRow = document.createElement("tr");
@@ -155,10 +162,15 @@ var allFunctions = function () {
   };
 
   var getAndDisplayMap = function (wms_request) {
-    var img = document.createElement("img");
+    
+	var mapDiv = document.querySelector("main .mapDiv");
+	while (mapDiv.firstChild) {
+		mapDiv.removeChild(mapDiv.firstChild);
+	}
+	var img = document.createElement("img");
     img.style.display = "none";
     img.src = wms_request;
-    document.querySelector("main .mapDiv").append(img);
+    mapDiv.append(img);
     img.style.display = "block";
   };
 
@@ -297,6 +309,11 @@ var allFunctions = function () {
       requestWMSmap(lat, lng);
     }
   });
+<<<<<<< Updated upstream
 }
+=======
+  };
+
+>>>>>>> Stashed changes
 document.addEventListener("DOMContentLoaded", allFunctions);
 
